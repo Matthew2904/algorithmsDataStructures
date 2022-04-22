@@ -1,3 +1,5 @@
+import org.w3c.dom.css.CSSStyleDeclaration;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -9,11 +11,18 @@ import java.util.Scanner;
 public class Main {
 
 
-    public  static void main(String[] args) {
+    public static void main(String[] args) {
+
+
+
+
 
 
         // Initialise grid object
         Grid grid = new Grid();
+
+
+
 
 
         // Call a function to get a randomised array of ints from 1-9
@@ -27,17 +36,20 @@ public class Main {
         grid.solveSudoku(grid.getGrid(), 0, 0, randomisedOrder);
 
 
+
         // Function to remove the correct amount of numbers based on the difficulty
         grid.removeNumbers(difficulty);
 
 
         System.out.println("\nInitial Board State: ");
         // Print the sudoku grid
-        grid.print(grid.getGrid());
+        grid.print();
+
+
 
 
         // Get the amount of remaining places from the grid and output them to the user
-        int remainingPlaces = grid.remainingPlaces();
+        int remainingPlaces = grid.remainingPlaces(grid.getGrid());
         System.out.println("\nRemaining Places: " + remainingPlaces);
 
 
@@ -46,8 +58,54 @@ public class Main {
 
 
 
-        // Handle the users input
-        handleInput(grid.getGrid());
+
+        // Declare Scanner
+        Scanner myObj = new Scanner(System.in);
+
+
+        String input = "";
+        String keyword;
+
+
+        // Continue getting user input until they have selected a valid option
+        while (!input.equals("quit") && !input.equals("save")) {
+            System.out.println("\nPlease input a command:");
+            input = myObj.nextLine();
+            input.trim();// Read user input// Read user input
+
+            // Keyword is set to the first word of the command
+            keyword = input.split(",")[0];
+
+            // If the user input equals 'quit' then break the loop
+            if (keyword.equals("quit")) {
+                break;
+            } else if (keyword.equals("save")) {
+                // saveGame(input);
+                System.out.println("\nYou have Saved the game");
+                break;
+            } else if (keyword.equals("display controls")) {
+                displayControls();
+
+            } else if (keyword.equals("input")) {
+                grid.inputValue(grid.getGrid(), input);
+
+                System.out.println("\nYou have Inputted a value");
+            } else if (keyword.equals("undo")) {
+                //undo();
+                System.out.println("\nYou used undo");
+            } else if (keyword.equals("redo")) {
+                // redo();
+                System.out.println("\nYou used redo");
+            } else if (keyword.equals("check grid")) {
+                 grid.checkGrid();
+                System.out.println("\nYou used check grid");
+            } else {
+                System.out.println("\nYour input was not valid");
+            }
+
+
+        }
+        System.out.println("\nYou have quit the game");
 
 
 
@@ -57,7 +115,8 @@ public class Main {
     // Function to handle the input of the user and call the appropriate functions
     //based on the command they choose to enter
 
-    private  void handleInput(int[][] grid)
+    /*
+    private static void handleInput(int[][] grid)
     {
 
 
@@ -109,6 +168,8 @@ public class Main {
         }
         System.out.println("You have quit the game");
     }
+*/
+
 
 
     // function to display the controls to the user via the possible input commands
@@ -116,7 +177,7 @@ public class Main {
 
         System.out.println("\nINPUT COMMANDS:\n'display controls'  " +
                 "           - Displays this message\n'input,<row>,<column>,<value>'" +
-                " - Inputs a value into the grid\n'quit'        " +
+                " - Inputs a value into the grid, row[0-8], col[0-8], value [1-9]\n'quit'        " +
                 "                 - ends the current game\n'save,<value>'     " +
                 "            - saves the current game under the name in value and ends \n'undo'            " +
                 "             - Undoes the most recent move\n'redo'         " +

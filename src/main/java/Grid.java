@@ -93,7 +93,7 @@ public class Grid {
 
 
     /* A utility function to print grid */
-    public void print(int[][] grid)
+    public void print()
     {
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++)
@@ -171,7 +171,7 @@ public class Grid {
             /* Break the loop at 20 or 40 if easy or medium is were the
                Selected difficulty
             */
-            if ((difficulty.equals("easy") && i == 20 )||(difficulty.equals("medium") && i == 40))
+            if ((difficulty.equals("easy") && i == 1 )||(difficulty.equals("medium") && i == 40))
             {
                 break;
             }
@@ -185,7 +185,7 @@ public class Grid {
 
 
     // Function to return the amount of remaining Places to the user
-    public int remainingPlaces()
+    public int remainingPlaces(int[][] grid)
     {
         int counter = 0;
 
@@ -202,8 +202,11 @@ public class Grid {
         return counter;
     }
 
+
+
+
     // Function to input a value to a index in the grid
-    public void inputValue(String input) {
+    public void inputValue(int[][] grid, String input) {
 
 
         // split the input by comma
@@ -214,32 +217,44 @@ public class Grid {
         // check the array has 4 items in length
         if (values.length == 4)
         {
-            for (int i = 1; i < inputValues.length; i++)
+            for (int i = 0; i < 3; i++)
             {
                 // Try to convert the input values to ints if it is not possible then print error message
                 try
                 {
                     inputValues[i] = Integer.parseInt(values[i+1]);
 
-                    // iterate through the array and make sure every item is between 1-9
-                    for (int x = 0; x < inputValues.length; x++)
-                    {
-                        if (inputValues[x] > 9 || inputValues[x] < 1)
-                        {
-                            System.out.println("Please enter a valid input from the input commands");
-                            break;
-                        }
+                   // System.out.println("Input Values[" + i + "]: " + inputValues[i]);
 
-                        if (x == 2)
+                    // Make sure input value is between 1 and 9
+                    if ((inputValues[i] > 8 || inputValues[i] < 0 ) && (i == 0 || i ==1))
+                    {
+                        System.out.println("\nPlease enter a valid input from the input commands");
+                        break;
+                    }
+
+                    // if all of the values get validated change the value of the position
+                    if (i == 2)
+                    {
+                        if (inputValues[i] < 10 && inputValues[i] > 0)
                         {
                             grid[inputValues[0]][inputValues[1]] = inputValues[2];
-                            print(grid);
+                            System.out.println();
+                            print();
+                            System.out.println();
                         }
+                        else
+                        {
+                            System.out.println("\nPlease enter a valid input from the input commands");
+                        }
+
                     }
+
                 }
                 catch (NumberFormatException ex)
                 {
                     System.out.println("Please enter a valid input from the input commands");
+                    break;
 
                 }
             }
@@ -249,7 +264,52 @@ public class Grid {
 
 
 
+
+
         // if the above input validation passes then input the value into the section of the grid
+
+    }
+
+    //function to check if the users soltion is correct
+    public void checkGrid() {
+
+        // For every index in the grid
+        // check that the number isSafe;
+        int row;
+        int col;
+        int num;
+
+        boolean safe = true;
+
+
+        for (int i =0; i < 81; i++)
+        {
+            row = i/9;
+            col = i % 9;
+
+            num = grid[row][col];
+
+          grid[row][col] = 0;
+          safe =  isSafe(grid, row, col, num);
+          if (safe == false)
+          {
+              System.out.println(row + " " + col + " " + num);
+              break;
+          }
+          else{
+              grid[row][col] = num;
+          }
+
+        }
+
+
+        if (safe == true){
+            System.out.println("Grid Correct");
+        }
+        else{
+            System.out.println("Grid Incorrect At End");
+        }
+
 
     }
 }
