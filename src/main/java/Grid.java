@@ -93,7 +93,7 @@ public class Grid {
 
 
     /* A utility function to print grid */
-    public  void print(int[][] grid)
+    public void print(int[][] grid)
     {
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++)
@@ -202,7 +202,54 @@ public class Grid {
         return counter;
     }
 
+    // Function to input a value to a index in the grid
+    public void inputValue(String input) {
+
+
+        // split the input by comma
+        int inputValues[] = new int[3];
+
+        String values[] = input.split(",");
+
+        // check the array has 4 items in length
+        if (values.length == 4)
+        {
+            for (int i = 1; i < inputValues.length; i++)
+            {
+                // Try to convert the input values to ints if it is not possible then print error message
+                try
+                {
+                    inputValues[i] = Integer.parseInt(values[i+1]);
+
+                    // iterate through the array and make sure every item is between 1-9
+                    for (int x = 0; x < inputValues.length; x++)
+                    {
+                        if (inputValues[x] > 9 || inputValues[x] < 1)
+                        {
+                            System.out.println("Please enter a valid input from the input commands");
+                            break;
+                        }
+
+                        if (x == 2)
+                        {
+                            grid[inputValues[0]][inputValues[1]] = inputValues[2];
+                            print(grid);
+                        }
+                    }
+                }
+                catch (NumberFormatException ex)
+                {
+                    System.out.println("Please enter a valid input from the input commands");
+
+                }
+            }
+
+        }
 
 
 
+
+        // if the above input validation passes then input the value into the section of the grid
+
+    }
 }
