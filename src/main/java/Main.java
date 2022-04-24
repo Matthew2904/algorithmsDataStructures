@@ -80,7 +80,7 @@ public class Main {
             if (keyword.equals("quit")) {
                 break;
             } else if (keyword.equals("save")) {
-                // saveGame(input);
+                 grid.saveGame();
                 System.out.println("\nYou have Saved the game");
                 break;
             } else if (keyword.equals("display controls")) {
@@ -91,14 +91,14 @@ public class Main {
 
                 System.out.println("\nYou have Inputted a value");
             } else if (keyword.equals("undo")) {
-                //undo();
-                System.out.println("\nYou used undo");
+                grid.undo();
+                //System.out.println("\nYou used undo");
             } else if (keyword.equals("redo")) {
-                // redo();
-                System.out.println("\nYou used redo");
+                 grid.redo();
+                //System.out.println("\nYou used redo");
             } else if (keyword.equals("check grid")) {
                  grid.checkGrid();
-                System.out.println("\nYou used check grid");
+                //System.out.println("\nYou used check grid");
             } else {
                 System.out.println("\nYour input was not valid");
             }
@@ -107,6 +107,8 @@ public class Main {
         }
         System.out.println("\nYou have quit the game");
 
+
+        grid.printStack();
 
 
     }
@@ -178,8 +180,8 @@ public class Main {
         System.out.println("\nINPUT COMMANDS:\n'display controls'  " +
                 "           - Displays this message\n'input,<row>,<column>,<value>'" +
                 " - Inputs a value into the grid, row[0-8], col[0-8], value [1-9]\n'quit'        " +
-                "                 - ends the current game\n'save,<value>'     " +
-                "            - saves the current game under the name in value and ends \n'undo'            " +
+                "                 - ends the current game\n'save game'     " +
+                "            - saves the current game\n'undo'            " +
                 "             - Undoes the most recent move\n'redo'         " +
                 "                - Redoes the most recent move\n'check grid'                   - Checks whether sudoku solution is correct");
     }
@@ -195,12 +197,12 @@ public class Main {
         String difficulty = "";
 
         // Continue getting user input until they have selected a valid option
-        while (!difficulty.equals("easy") && !difficulty.equals("medium") && !difficulty.equals("hard")) {
+        while (!difficulty.equals("easy") && !difficulty.equals("medium") && !difficulty.equals("hard") && !difficulty.equals("test")) {
 
             difficulty = myObj.nextLine();
             difficulty.trim();// Read user input// Read user input
 
-            if (difficulty.equals("easy") || difficulty.equals("medium") || difficulty.equals("hard")) {
+            if (difficulty.equals("easy") || difficulty.equals("medium") || difficulty.equals("hard") || difficulty.equals("test")) {
                 break;
             }
             System.out.println("Please input a valid option ('easy', 'medium' or 'hard') ");

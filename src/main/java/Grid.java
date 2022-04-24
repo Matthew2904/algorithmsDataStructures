@@ -1,5 +1,6 @@
-import java.util.ArrayList;
-import java.util.Random;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.*;
 
 public class Grid {
 
@@ -14,6 +15,22 @@ public class Grid {
             { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
             { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
             { 0, 0, 0, 0, 0, 0, 0, 0, 0 } };
+
+    private int initialBoardState[][] = { { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0 } };
+
+
+    // Initialise an empty string
+    Stack<String> undoStack = new Stack<String>();
+    Stack<String> redoStack = new Stack<String>();
+
 
 
     //Getter Methods
@@ -102,6 +119,14 @@ public class Grid {
         }
     }
 
+    public void printInitialBoardState()
+    {
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++)
+                System.out.print(initialBoardState[i][j] + " ");
+            System.out.println();
+        }
+    }
 
 
 
@@ -171,7 +196,7 @@ public class Grid {
             /* Break the loop at 20 or 40 if easy or medium is were the
                Selected difficulty
             */
-            if ((difficulty.equals("easy") && i == 1 )||(difficulty.equals("medium") && i == 40))
+            if ((difficulty.equals("easy") && i == 20 )||(difficulty.equals("medium") && i == 40) ||(difficulty.equals("test") && i == 1))
             {
                 break;
             }
@@ -179,6 +204,14 @@ public class Grid {
             grid[row][col] = 0;
 
         }
+
+        for (int i  =0; i < 9; i++)
+        {
+            for (int x =0; x < 9; x++){
+                initialBoardState[i][x] = grid[i][x];
+            }
+        }
+
 
     }
 
@@ -238,10 +271,32 @@ public class Grid {
                     {
                         if (inputValues[i] < 10 && inputValues[i] > 0)
                         {
-                            grid[inputValues[0]][inputValues[1]] = inputValues[2];
-                            System.out.println();
-                            print();
-                            System.out.println();
+                            // If the position in the initial board state eqauls 0 then
+                            //  allow thew position to be altered
+                            if (initialBoardState[inputValues[0]][inputValues[1]] == 0 )
+                            {
+                                // Add the command to the undo stack
+                                undoStack.add(input);
+
+                                // Clear the redo Stack
+                                redoStack.clear();
+                                // Set the position in the grid to the input value
+                                grid[inputValues[0]][inputValues[1]] = inputValues[2];
+
+                                // Print out the grid after every input
+                                System.out.println();
+                                print();
+                                System.out.println();
+                            }
+                            // ot
+                            else
+                            {
+                                System.out.println("Input Value: Row " + inputValues[0] + " Col " + inputValues[1] + " cannot be altered");
+
+                            }
+
+
+
                         }
                         else
                         {
@@ -261,14 +316,15 @@ public class Grid {
 
         }
 
-
-
-
-
-
         // if the above input validation passes then input the value into the section of the grid
 
     }
+
+
+
+
+
+
 
     //function to check if the users soltion is correct
     public void checkGrid() {
@@ -293,7 +349,8 @@ public class Grid {
           safe =  isSafe(grid, row, col, num);
           if (safe == false)
           {
-              System.out.println(row + " " + col + " " + num);
+              //System.out.println(row + " " + col + " " + num);
+              grid[row][col] = num;
               break;
           }
           else{
@@ -304,12 +361,229 @@ public class Grid {
 
 
         if (safe == true){
-            System.out.println("Grid Correct");
+            System.out.println("Well done, You successfully completed the sudoku");
         }
         else{
-            System.out.println("Grid Incorrect At End");
+            System.out.println("Unfortunately your solution is incorrect, keep trying ;)");
         }
 
 
     }
+
+
+
+
+
+
+
+
+
+    public void printStack(){
+
+        System.out.println(undoStack);
+    }
+
+
+
+
+
+
+
+
+
+
+    public void undo(){
+
+
+        if(undoStack.size() > 0 )
+        {
+
+        // Set the input command to the top item of the stack
+        String inputCommand = undoStack.pop();
+
+        // Get an array of the inputCommand
+        String values[] = inputCommand.split(",");
+
+        // Set the Values
+        int row = Integer.parseInt(values[1]);
+        int col = Integer.parseInt(values[2]);
+        int num = Integer.parseInt(values[3]);
+
+
+        // if the size of the undoStack is larger than or equal to one after
+        // popping the last input command
+
+
+        String currentCommand[];
+
+
+        int currentRow;
+        int currentCol;
+        int currentNum;
+
+        int previousValue =0;
+
+
+
+  // if the stack originally contained two or more items then iterate over the remaining
+  // inputs into the stack to see if they had previously altered that position
+if (undoStack.size() > 0 ) {
+    for (int i = (undoStack.size() - 1); i >= 0; i--) {
+        currentCommand = undoStack.get(i).split(",");
+
+        currentRow = Integer.parseInt(currentCommand[1]);
+        currentCol = Integer.parseInt(currentCommand[2]);
+        currentNum = Integer.parseInt(currentCommand[3]);
+
+        // If the current row and column in the loop equal the last altered
+        // position then change the position to the previous value and break the loop;
+        if ((row == currentRow) && (col == currentCol)) {
+
+            grid[row][col] = currentNum;
+            System.out.println("Undo: Replaced " + num + " with most previous value " + currentNum);
+            previousValue = 1;
+            redoStack.add(inputCommand);
+            break;
+        }
+
+
+    }
+}
+
+        // in the case that no previous alteration to the grid position was made then
+        // It should be restored to the value of the position store within the initial board state
+        if (previousValue == 0)
+        {
+            grid[row][col] = initialBoardState[row][col];
+            int number = initialBoardState[row][col];
+            System.out.println("\nUndo: Row " + row + " Col " + col +" has been returned to its initial board state  "  + number);
+            redoStack.add(inputCommand);
+            //printInitialBoardState();
+        }
+
+
+    }
+
+else{
+    System.out.println("Nothing to Undo");
+        }
+
+
+
+// Print the current grid
+print();
+    }
+
+
+    public void redo(){
+
+
+        if (redoStack.size() > 0){
+            // Set the input command to the top item of the redo stack
+            // Pop the input command at the top of the redoStack
+            String inputCommand = redoStack.pop();
+
+
+            //Push it onto the top of the undoStack
+            undoStack.push(inputCommand);
+
+
+
+            // Get an array of the inputCommand
+            String values[] = inputCommand.split(",");
+
+            // Set the Values
+            int row = Integer.parseInt(values[1]);
+            int col = Integer.parseInt(values[2]);
+            int num = Integer.parseInt(values[3]);
+
+
+            int currentNum = grid[row][col];
+
+            grid[row][col] = num;
+
+
+            System.out.println("Redo: Row " + row + " Col " + col +" =" + num + " replaced "  + currentNum + "\n");
+            print();
+        }
+        {
+
+            System.out.println("Redo: nothing to redo");
+        }
+
+
+    }
+
+
+
+
+    public void saveGame(){
+
+        // Declare Scanner
+        Scanner myObj = new Scanner(System.in);
+
+        String filename = "";
+
+        System.out.println("\nPlease input a filename (note that if you enter a name of a file already in folder it will be overwritten:");
+        filename = myObj.nextLine(); // Get the user input
+        filename.trim(); // trim the user input
+
+
+        // Initialise a string 4 data structures (grid, IBS, undoStack, redoStack)
+        String gridString = "";
+        String ibsString = "";
+        String undoString = "";
+        String redoString = "";
+
+        // Append every position in the current state of the grid to a string followed by a comma
+        for (int row = 0; row < 9; row++) {
+            for (int col = 0; col < 9; col++) {
+
+            // Append the value with a comma to the file contents variable
+                gridString = gridString + grid[row][col] + ",";
+
+            }
+        }
+
+
+
+        // Append every position in the initial board state to a string followed by a comma
+        for (int row = 0; row < 9; row++) {
+            for (int col = 0; col < 9; col++) {
+
+                // Append the value with a comma to the file contents variable
+                ibsString = ibsString + initialBoardState[row][col] + ",";
+
+            }
+        }
+
+
+        // Append every input command on the undoStack onto the undoString variable
+        for (int i = 0; i < undoStack.size(); i++){
+            redoString = redoString  + undoStack.get(i) + ",";
+        }
+
+        // Append every input command on the redoStack onto the redoString variable
+        for (int i = 0; i < redoStack.size(); i++){
+            undoString = undoString  + redoStack.get(i) + ",";
+        }
+
+
+        try {
+            // Create or overwrite file
+            FileWriter myWriter = new FileWriter(filename + ".txt");
+
+            // Write to the file
+            myWriter.write(gridString +  "\n" +  ibsString + "\n" + undoString + "\n" +redoString);
+            myWriter.close();
+            System.out.println("Saved the game to file: " + filename + ".txt");
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+
+
+
+    }
+
 }
