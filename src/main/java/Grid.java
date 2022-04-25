@@ -1,3 +1,5 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
@@ -560,12 +562,12 @@ print();
 
         // Append every input command on the undoStack onto the undoString variable
         for (int i = 0; i < undoStack.size(); i++){
-            undoString = undoString  + undoStack.get(i) + ",";
+            undoString = undoString  + undoStack.get(i) + "/";
         }
 
         // Append every input command on the redoStack onto the redoString variable
         for (int i = 0; i < redoStack.size(); i++){
-            redoString = redoString  + redoStack.get(i) + ",";
+            redoString = redoString  + redoStack.get(i) + "/";
         }
 
 
@@ -585,5 +587,148 @@ print();
 
 
     }
+
+
+
+    public int loadGame(){
+
+
+
+        Scanner myObj = new Scanner(System.in);
+
+        String input = "";
+
+        int foundFile =0;
+
+
+        // While the user still wants to try and load a previous game
+        while (!input.equals("quit")) {
+            //output instructions
+            System.out.println("Enter the name of a previous game to load or enter 'quit' to stop the current game:\n");
+
+
+
+            input = myObj.nextLine();
+            //if the user input equals quit then break the loop
+            if (input.equals("quit")){
+                break;
+            }
+            // Else attempt to read in the data from the file
+            else{
+                try {
+                    File fileReader = new File(input + ".txt");
+                    Scanner myReader = new Scanner(fileReader);
+                    foundFile = 1;
+                    String data =  "";
+                    for(int i =0; i < 4; i++)
+                    {
+                        data = myReader.nextLine();
+
+                        if (i==0)
+                        {
+
+                            loadCurrentGrid(data);
+                        }
+                        else if (i==1)
+                        {
+
+                            loadInitialBoardState(data);
+                        }
+                        else if (i==2)
+                        {
+
+                            loadUndoStack(data);
+                        }
+                        else if (i==3)
+                        {
+
+                            loadRedoStack(data);
+                        }
+                    }
+
+
+
+                  //  while (myReader.hasNextLine()) {
+                   //     String data = myReader.nextLine();
+                   //     System.out.println(data);
+                   //     foundFile = 1;
+                   // }
+
+
+
+                    myReader.close();
+
+                    break;
+                } catch (FileNotFoundException e) {
+
+                    System.out.println("\nAn error occurred loading the file:\n");
+                    // e.printStackTrace();
+                }
+            }
+
+
+        }
+
+
+
+        return foundFile;
+
+    }
+
+    private void loadInitialBoardState(String data) {
+
+        String values[] = data.split(",");
+
+        int row;
+        int col;
+
+        for (int i = 0; i < 81; i++){
+
+            row = i/9;
+            col = i%9;
+
+            initialBoardState[row][col] = Integer.parseInt(values[i]);
+        }
+
+    }
+
+    private void loadCurrentGrid(String data) {
+        String values[] = data.split(",");
+
+        int row;
+        int col;
+
+        for (int i = 0; i < 81; i++){
+
+            row = i/9;
+            col = i%9;
+
+            grid[row][col] = Integer.parseInt(values[i]);
+        }
+    }
+
+
+    private void loadUndoStack(String data) {
+
+        String values[] = data.split("/");
+
+        for (int i = 0; i < values.length; i++){
+
+
+            undoStack.add(values[i]);
+        }
+    }
+
+    private void loadRedoStack(String data) {
+
+        String values[] = data.split("/");
+
+        for (int i = 0; i < values.length; i++){
+
+
+            redoStack.add(values[i]);
+        }
+    }
+
 
 }
