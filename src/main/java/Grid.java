@@ -560,12 +560,12 @@ print();
 
         // Append every input command on the undoStack onto the undoString variable
         for (int i = 0; i < undoStack.size(); i++){
-            redoString = redoString  + undoStack.get(i) + ",";
+            undoString = undoString  + undoStack.get(i) + ",";
         }
 
         // Append every input command on the redoStack onto the redoString variable
         for (int i = 0; i < redoStack.size(); i++){
-            undoString = undoString  + redoStack.get(i) + ",";
+            redoString = redoString  + redoStack.get(i) + ",";
         }
 
 
