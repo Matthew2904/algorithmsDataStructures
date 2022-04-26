@@ -184,11 +184,6 @@ public class Main {
                 {
                     grid.redo();
                 }
-                // If the user's keyword input equals 'checkgrid' then call a function to check if the sudoku grid is correct
-               // else if (keyword.equals("check grid"))
-               // {
-               //     grid.checkGrid();
-               // }
                 // Else display a message to enter a valid input
                 else
                 {
@@ -217,8 +212,7 @@ public class Main {
                 "\n'quit'                         - ends the current game" +
                 "\n'save game'                    - saves the current game" +
                 "\n'undo'                         - Undoes the most recent move" +
-                "\n'redo'                         - Redoes the most recent move" +
-                "\n'check grid'                   - Checks whether sudoku solution is correct");
+                "\n'redo'                         - Redoes the most recent move" );
     }
 
 
