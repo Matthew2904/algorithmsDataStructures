@@ -210,7 +210,7 @@ public class Main {
                 "\n'display controls'             - Displays this message" +
                 "\n'input,<row>,<column>,<value>' - Inputs a value into the grid, row[0-8], col[0-8], value [1-9]" +
                 "\n'quit'                         - ends the current game" +
-                "\n'save game'                    - saves the current game" +
+                "\n'save'                         - saves the current game" +
                 "\n'undo'                         - Undoes the most recent move" +
                 "\n'redo'                         - Redoes the most recent move" );
     }

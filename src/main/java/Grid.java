@@ -245,7 +245,7 @@ public class Grid {
             col =  randomIndexes[i]%9;
 
             // Break the loop at 20 or 40 if easy or medium
-            if ((difficulty.equals("easy") && i == 20 )||(difficulty.equals("medium") && i == 40) ||(difficulty.equals("test") && i == 1))
+            if ((difficulty.equals("easy") && i == 20 )||(difficulty.equals("medium") && i == 40) ||(difficulty.equals("test") && i == 2))
             {
                 break;
             }
